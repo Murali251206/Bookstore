@@ -144,6 +144,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -330,8 +331,13 @@
     grid-template-columns: 1fr;
   }
 
+  .address-form {
+    order: 1;
+  }
+
   .order-summary {
     position: static;
+    order: -1;
   }
 
   .saved-addresses-list {
