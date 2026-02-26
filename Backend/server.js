@@ -1,9 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const dotenv = require("dotenv");
+require("dotenv").config();
 
-dotenv.config();
 const app = express();
 
 app.use(cors());
@@ -15,14 +14,24 @@ app.use("/api/orders", require("./routes/orders"));
 app.use("/api/payment", require("./routes/payment"));
 
 app.get("/api/health", (req, res) => {
-  res.json({ msg: "Server is running" });
+  res.status(200).json({ message: "Server is running" });
 });
 
 const PORT = process.env.PORT || 5000;
 
+if (!process.env.MONGO_URI) {
+  console.error("MONGO_URI is not defined");
+  process.exit(1);
+}
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("MongoDB connected");
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    console.log("MongoDB connected successfully");
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
   })
-  .catch(err => console.log("MongoDB connection error:", err));
+  .catch((error) => {
+    console.error("MongoDB connection error:", error.message);
+    process.exit(1);
+  });
